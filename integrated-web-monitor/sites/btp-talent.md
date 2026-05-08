@@ -14,3 +14,11 @@ description: Monitors Busan Techno Park (BTP) for 'Busan Regional Talent' relate
 3. **Extract:** Scrape the filtered search results (Title, Date, Link).
 4. **Database:** Compare with the Central DB (Google Doc).
 5. **Action:** If new, append to DB and notify via Gmail.
+
+## 🎨 Notification Standard (Template)
+- **Subject:** `[BTP] 부산지역인재 관련 신규 공고 알림 (N건)`
+- **HTML Layout:**
+  - Header: blue (#1a73e8) heading.
+  - Table: Collapse border, 100% width.
+  - Rows: Alternating colors or gray header (#f2f2f2).
+  - Columns: Title, Date, Link (Styled as '상세보기').
