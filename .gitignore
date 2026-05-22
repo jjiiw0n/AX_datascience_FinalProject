@@ -1,3 +1,6 @@
 .playwright-mcp/
 *.skill
 .gemini/
+results.json
+service-account-key.json
+*.html

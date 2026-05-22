@@ -12,11 +12,12 @@ description: Monitors Busan Techno Park (BTP) for 'Busan Regional Talent' relate
 1. **Navigate:** Go to the BTP notice board.
 2. **Search:** Use the search bar to filter for '부산지역인재'.
 3. **Extract:** Scrape the filtered search results (Title, Date, Link).
-4. **Database:** Compare with the Central DB (Google Doc).
-5. **Action:** If new, append to DB and notify via Gmail.
+4. **Database (History):** Compare with previous results by searching Gmail for `"[통합 알림]"` in all mailboxes.
+   - **Duplicate Check:** Title, Link, and Date must all match.
+5. **Action:** Include results in the consolidated report `[통합 알림] 웹 모니터링 결과 보고 (YYYY-MM-DD)`.
 
 ## 🎨 Notification Standard (Template)
-- **Subject:** `[BTP] 부산지역인재 관련 신규 공고 알림 (N건)`
+- **Report Section Title:** `[BTP] 부산테크노파크 부산지역인재 채용 공고`
 - **HTML Layout:**
   - Header: blue (#1a73e8) heading.
   - Table: Collapse border, 100% width.

@@ -19,11 +19,11 @@
 - 🧠 **Smart Keyword Filtering**  
   특정 키워드(예: `부산지역인재`)가 포함된 게시물만 선별 수집
 
-- 🗂 **Integrated Data Management**  
-  Google Docs 기반 기록 관리 및 중복 게시물 방지
+- 🗂 **Integrated Data Management (Gmail Search DB)**  
+  실제 발송된 메일 이력을 전체 메일함에서 검색하여 중복 수집을 방지하는 Event-Log 기반 DB 전략 채택 (제목+링크+등록일 교차 검증)
 
-- 📬 **Automated Gmail Notification**  
-  신규 정보 발생 시 Gmail API를 통해 뉴스레터 자동 전송
+- 📬 **Consolidated Gmail Notification**  
+  모든 사이트의 결과를 하나의 통합 뉴스레터로 취합하여 Gmail로 자동 전송
 
 - ⏰ **Scheduled Execution**  
   Windows Task Scheduler 기반 주기적 자동 실행
@@ -38,7 +38,7 @@ graph TD
     B --> C[Gemini AI Agent]
     C -->|Read Logic| D[SKILL.md Modules]
     C -->|Scrape| E[Playwright MCP]
-    C -->|Check/Record| F[Google Docs DB]
+    C -->|Check/Record| F[Gmail Search DB]
     C -->|Notify| G[Gmail API]
 ```
 
