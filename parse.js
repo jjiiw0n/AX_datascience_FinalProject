@@ -1,6 +1,51 @@
 const fs = require('fs');
+const path = require('path');
+
+// 요일 체크 (금요일: 5, 토요일: 6)
+const now = new Date();
+const dayOfWeek = now.getDay();
+if (dayOfWeek === 5 || dayOfWeek === 6) {
+    console.log(`Today is ${dayOfWeek === 5 ? 'Friday' : 'Saturday'}. Monitoring is skipped per policy.`);
+    process.exit(0);
+}
+
+const HISTORY_FILE = 'history.json';
+
+// 히스토리 로드
+function loadHistory() {
+    if (fs.existsSync(HISTORY_FILE)) {
+        try {
+            return JSON.parse(fs.readFileSync(HISTORY_FILE, 'utf8'));
+        } catch (e) {
+            return { etri: [], btp: [], youth: [] };
+        }
+    }
+    return { etri: [], btp: [], youth: [] };
+}
+
+// 히스토리 저장
+function saveHistory(history) {
+    fs.writeFileSync(HISTORY_FILE, JSON.stringify(history, null, 2), 'utf8');
+}
+
+// 링크 정규화: jsessionid 제거 및 핵심 파라미터(b_idx, internId)만 유지
+function normalizeLink(link) {
+    if (!link) return '';
+    let normalized = link.split(';jsessionid=')[0];
+    if (normalized.includes('?')) {
+        const [base, search] = normalized.split('?');
+        const params = new URLSearchParams(search);
+        const newParams = new URLSearchParams();
+        if (params.has('b_idx')) newParams.set('b_idx', params.get('b_idx'));
+        if (params.has('internId')) newParams.set('internId', params.get('internId'));
+        const queryString = newParams.toString();
+        return queryString ? `${base}?${queryString}` : base;
+    }
+    return normalized;
+}
 
 function parseEtri() {
+    if (!fs.existsSync('etri.html')) return [];
     const html = fs.readFileSync('etri.html', 'utf8');
     const posts = [];
     const tbodyMatch = html.match(/<tbody>([\s\S]*?)<\/tbody>/);
@@ -25,6 +70,7 @@ function parseEtri() {
 }
 
 function parseBtp() {
+    if (!fs.existsSync('btp.html')) return [];
     const html = fs.readFileSync('btp.html', 'utf8');
     const posts = [];
     const rows = html.match(/<tr>([\s\S]*?)<\/tr>/g);
@@ -48,6 +94,7 @@ function parseBtp() {
 }
 
 function parseYouth() {
+    if (!fs.existsSync('youth.html')) return [];
     const html = fs.readFileSync('youth.html', 'utf8');
     const posts = [];
     const rows = html.match(/<tr[^>]*?>([\s\S]*?)<\/tr>/g);
@@ -75,11 +122,39 @@ function parseYouth() {
     return posts;
 }
 
-const results = {
+const history = loadHistory();
+const currentResults = {
     etri: parseEtri(),
     btp: parseBtp(),
     youth: parseYouth()
 };
 
-fs.writeFileSync('results.json', JSON.stringify(results, null, 2), 'utf8');
-console.log('Successfully wrote results to results.json');
+const newResults = {
+    etri: [],
+    btp: [],
+    youth: []
+};
+
+// 중복 제거 및 신규 항목 추출
+Object.keys(currentResults).forEach(site => {
+    currentResults[site].forEach(post => {
+        const normalizedLink = normalizeLink(post.link);
+        const postKey = `${post.title}_${normalizedLink}`;
+        if (!history[site].includes(postKey)) {
+            newResults[site].push(post);
+            history[site].push(postKey);
+        }
+    });
+});
+
+// 결과 저장
+fs.writeFileSync('results.json', JSON.stringify(currentResults, null, 2), 'utf8');
+fs.writeFileSync('new_results.json', JSON.stringify(newResults, null, 2), 'utf8');
+saveHistory(history);
+
+console.log('--- Monitoring Report ---');
+console.log(`ETRI: ${newResults.etri.length} new posts`);
+console.log(`BTP: ${newResults.btp.length} new posts`);
+console.log(`Youth: ${newResults.youth.length} new posts`);
+console.log('-------------------------');
+console.log('Successfully updated results.json, new_results.json and history.json');

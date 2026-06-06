@@ -16,22 +16,24 @@ The monitoring logic is split into individual modules for better maintainability
 - **BTP Regional Talent:** `sites/btp-talent.md` - Monitors Busan Techno Park for 'Busan Regional Talent' keywords.
 - **2030 Youth Intern:** `sites/youth-intern.md` - Monitors the 2030 Youth Intern recruitment board.
 
-### 2. ⚙️ Infrastructure (`infra/`)
+## ⚙️ Infrastructure (`infra/`)
 - **Scheduler:** `infra/scheduler.md` - Manages Windows Task Scheduler and batch execution settings.
+- **Parsing & Filtering:** `parse.js` - JavaScript script that scrapes local HTML files, compares with `history.json`, and outputs `new_results.json`.
 
 ## 📓 Central Resources
-- **History Tracking:** Gmail Search fallback (using `[통합 알림]` tag).
+- **History Tracking:** `history.json` (Local file for persistent state).
 - **Primary Account:** `jeew0n.lee.217@gmail.com` (Both Sender and Receiver).
 
 ## 🛠 Execution Workflow
-1. **Load Modules:** Identify the target sites and load logic from the `sites/` folder.
-2. **Process:** Scrape, filter, and compare with previous history by searching Gmail for `"[통합 알림]"` in all mailboxes.
-   - **Duplicate Check:** Match 'Title', 'Link', and 'Date/Period'. All three must match to be considered a duplicate.
-   - **ETRI Special Rule:** Exclude posts with dates 2026-04-28, 2026-05-08, 2026-05-12.
-3. **Notify (Consolidated Report):**
-   - **Single Email:** Send one consolidated report for all sites.
-   - **Subject:** `[통합 알림] 웹 모니터링 결과 보고 (YYYY-MM-DD)`
-   - **Content:** Include tables for all sites. If no new posts, mark as "No new announcements".
+1. **Scrape:** Use Playwright to download the latest HTML from target sites.
+2. **Filter (Code-based):** Run `node parse.js` to compare current data with `history.json`.
+   - **Output:** Only new items are stored in `new_results.json`.
+3. **Notify (AI-assisted):**
+   - **Load Data:** Read `new_results.json`.
+   - **Generate Report:** AI creates a consolidated report based *only* on the new items.
+   - **Email:** Send via Gmail. Subject: `[통합 알림] 웹 모니터링 결과 보고 (YYYY-MM-DD)`.
+   - **Heartbeat:** If no new posts, send a brief "System operational, no new updates" message.
+
 
 ## 💡 Usage Command
 `"통합 웹 모니터링 스킬 실행해줘"`

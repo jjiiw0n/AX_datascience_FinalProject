@@ -1,0 +1,24 @@
+{
+  "name": "final_project",
+  "version": "1.0.0",
+  "description": "> Gemini AI Agent와 Playwright MCP를 기반으로,  \r > 사용자가 지정한 웹사이트의 신규 정보를 자동 수집·분석·전달하는 **AI 기반 커리어 뉴스레터 자동화 시스템**",
+  "main": "parse.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/jjiiw0n/AX_datascience_FinalProject.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "type": "commonjs",
+  "bugs": {
+    "url": "https://github.com/jjiiw0n/AX_datascience_FinalProject/issues"
+  },
+  "homepage": "https://github.com/jjiiw0n/AX_datascience_FinalProject#readme",
+  "dependencies": {
+    "playwright": "^1.60.0"
+  }
+}

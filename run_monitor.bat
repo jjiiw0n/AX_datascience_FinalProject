@@ -1,3 +1,31 @@
 @echo off
+setlocal enabledelayedexpansion
+
+:: 한글 깨짐 방지를 위한 UTF-8 코드페이지 설정
+chcp 65001 > nul
+
+:: 디렉토리 이동
 cd /d "C:\Users\zzib0\Downloads\AX_datascience\final_project"
-"C:\Users\zzib0\AppData\Roaming\npm\gemini.cmd" -y subagent web-monitor-agent "웹 모니터링 작업을 시작하고 결과를 jeew0n.lee.217@gmail.com으로 보고해줘. 신규 소식이 없어도 정상 작동 메일을 보내야 해."
+
+echo [Step 1] 웹사이트 수집 시작 (Scraping)...
+node scrape.js
+if %errorlevel% neq 0 (
+    echo Scraping failed. Exiting.
+    exit /b %errorlevel%
+)
+
+echo [Step 2] AI 데이터 추출 시작 (Parsing)...
+node parse_with_ai.js
+if %errorlevel% neq 0 (
+    echo Parsing failed. Exiting.
+    exit /b %errorlevel%
+)
+
+echo [Step 3] 중복 체크 및 필터링 (Filtering)...
+node filter.js
+
+echo [Step 4] 알림 메일 발송 (Notifying)...
+node notify.js
+
+echo 모든 작업이 성공적으로 완료되었습니다.
+pause
