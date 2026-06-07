@@ -17,6 +17,7 @@ function loadHistory() {
         try {
             return JSON.parse(fs.readFileSync(HISTORY_FILE, 'utf8'));
         } catch (e) {
+            console.error('Error loading history:', e);
             return { etri: [], btp: [], youth: [] };
         }
     }
@@ -31,13 +32,18 @@ function saveHistory(history) {
 // 링크 정규화: jsessionid 제거 및 핵심 파라미터(b_idx, internId)만 유지
 function normalizeLink(link) {
     if (!link) return '';
-    let normalized = link.split(';jsessionid=')[0];
+    // 1. jsessionid 부분만 제거 (뒤의 쿼리 스트링은 보존)
+    let normalized = link.replace(/;jsessionid=[^?#]*/, '');
+    
     if (normalized.includes('?')) {
         const [base, search] = normalized.split('?');
         const params = new URLSearchParams(search);
         const newParams = new URLSearchParams();
+        
+        // 핵심 식별자만 보존
         if (params.has('b_idx')) newParams.set('b_idx', params.get('b_idx'));
         if (params.has('internId')) newParams.set('internId', params.get('internId'));
+        
         const queryString = newParams.toString();
         return queryString ? `${base}?${queryString}` : base;
     }
@@ -137,9 +143,11 @@ const newResults = {
 
 // 중복 제거 및 신규 항목 추출
 Object.keys(currentResults).forEach(site => {
+    if (!history[site]) history[site] = [];
     currentResults[site].forEach(post => {
         const normalizedLink = normalizeLink(post.link);
-        const postKey = `${post.title}_${normalizedLink}`;
+        const cleanTitle = post.title.trim();
+        const postKey = `${cleanTitle}_${normalizedLink}`;
         if (!history[site].includes(postKey)) {
             newResults[site].push(post);
             history[site].push(postKey);

@@ -4,11 +4,27 @@ const HISTORY_FILE = 'history.json';
 const RESULTS_FILE = 'results.json';
 const NEW_RESULTS_FILE = 'new_results.json';
 
+// 요일 체크 로직 (운영 시 필요하면 활성화)
+// ...
+
+function loadJson(file, defaultVal = {}) {
+    if (fs.existsSync(file)) {
+        try {
+            return JSON.parse(fs.readFileSync(file, 'utf8'));
+        } catch (e) {
+            console.error(`Error loading ${file}:`, e);
+            return defaultVal;
+        }
+    }
+    return defaultVal;
+}
+
 // 링크 정규화: jsessionid 제거 및 핵심 파라미터(b_idx, internId)만 유지
 function normalizeLink(link) {
     if (!link) return '';
-    // 1. jsessionid 제거
-    let normalized = link.split(';jsessionid=')[0];
+    // 1. jsessionid 부분만 제거 (뒤의 쿼리 스트링은 보존)
+    let normalized = link.replace(/;jsessionid=[^?#]*/, '');
+    
     if (normalized.includes('?')) {
         const [base, search] = normalized.split('?');
         const params = new URLSearchParams(search);
@@ -22,13 +38,6 @@ function normalizeLink(link) {
         return queryString ? `${base}?${queryString}` : base;
     }
     return normalized;
-}
-
-// 요일 체크 로직 (운영 시 필요하면 활성화)
-// ...
-
-function loadJson(file, defaultVal = {}) {
-    // ...
 }
 
 const history = loadJson(HISTORY_FILE, { etri: [], btp: [], youth: [] });
@@ -48,7 +57,8 @@ Object.keys(currentResults).forEach(site => {
     if (Array.isArray(siteData)) {
         siteData.forEach(post => {
             const normalizedLink = normalizeLink(post.link);
-            const postKey = `${post.title}_${normalizedLink}`;
+            const cleanTitle = post.title.trim();
+            const postKey = `${cleanTitle}_${normalizedLink}`;
             if (!history[site].includes(postKey)) {
                 newResults[site].push(post);
                 history[site].push(postKey);

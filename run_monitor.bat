@@ -4,6 +4,17 @@ setlocal enabledelayedexpansion
 :: 한글 깨짐 방지를 위한 UTF-8 코드페이지 설정
 chcp 65001 > nul
 
+:: 요일 체크 (금요일: 5, 토요일: 6)
+for /f %%a in ('powershell -Command "([int](Get-Date).DayOfWeek)"') do set "day=%%a"
+if "%day%"=="5" (
+    echo Today is Friday. Monitoring is skipped per policy.
+    exit /b 0
+)
+if "%day%"=="6" (
+    echo Today is Saturday. Monitoring is skipped per policy.
+    exit /b 0
+)
+
 :: 디렉토리 이동
 cd /d "C:\Users\zzib0\Downloads\AX_datascience\final_project"
 
