@@ -19,23 +19,32 @@ function loadJson(file, defaultVal = {}) {
     return defaultVal;
 }
 
-// 링크 정규화: jsessionid 제거 및 핵심 파라미터(b_idx, internId)만 유지
+// 링크 정규화: jsessionid 제거 및 핵심 파라미터(b_idx, internId, id)만 유지
 function normalizeLink(link) {
     if (!link) return '';
-    // 1. jsessionid 부분만 제거 (뒤의 쿼리 스트링은 보존)
+    // 1. jsessionid 부분만 제거
     let normalized = link.replace(/;jsessionid=[^?#]*/, '');
     
     if (normalized.includes('?')) {
-        const [base, search] = normalized.split('?');
-        const params = new URLSearchParams(search);
+        const urlObj = new URL(normalized);
+        const params = urlObj.searchParams;
         const newParams = new URLSearchParams();
         
-        // 핵심 식별자만 보존
+        // 핵심 식별자 보존 (id 추가)
         if (params.has('b_idx')) newParams.set('b_idx', params.get('b_idx'));
         if (params.has('internId')) newParams.set('internId', params.get('internId'));
+        if (params.has('id')) newParams.set('internId', params.get('id')); // id도 internId로 통일하여 체크
+        
+        // 2030db.go.kr의 경우 경로가 계속 바뀌므로 ID가 있다면 경로를 통일함
+        if (urlObj.hostname.includes('2030db.go.kr')) {
+            const id = newParams.get('internId');
+            if (id) {
+                return `https://www.2030db.go.kr/intern/detail?internId=${id}`;
+            }
+        }
         
         const queryString = newParams.toString();
-        return queryString ? `${base}?${queryString}` : base;
+        return queryString ? `${urlObj.origin}${urlObj.pathname}?${queryString}` : `${urlObj.origin}${urlObj.pathname}`;
     }
     return normalized;
 }

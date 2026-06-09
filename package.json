@@ -19,6 +19,8 @@
   },
   "homepage": "https://github.com/jjiiw0n/AX_datascience_FinalProject#readme",
   "dependencies": {
-    "playwright": "^1.60.0"
+    "playwright": "^1.60.0",
+    "nodemailer": "^6.10.0",
+    "dotenv": "^16.4.7"
   }
 }

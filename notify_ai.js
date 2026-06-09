@@ -1,6 +1,5 @@
-require('dotenv').config();
 const fs = require('fs');
-const nodemailer = require('nodemailer');
+const { execSync } = require('child_process');
 
 function generateHtml(newResults) {
     let html = `
@@ -89,25 +88,17 @@ const subject = totalNew > 0
 
 console.log(`Sending email: ${subject}`);
 
-const transporter = nodemailer.createTransport({
-    service: 'gmail',
-    auth: {
-        user: process.env.EMAIL_USER,
-        pass: process.env.EMAIL_PASS
-    }
-});
+// HTML 본문을 파일로 저장
+fs.writeFileSync('email_body.html', html, 'utf8');
 
-const mailOptions = {
-    from: process.env.EMAIL_USER,
-    to: process.env.EMAIL_USER,
-    subject: subject,
-    html: html
-};
-
-transporter.sendMail(mailOptions, (error, info) => {
-    if (error) {
-        console.error('Failed to send email:', error);
-    } else {
-        console.log('Email sent successfully:', info.response);
-    }
-});
+try {
+    // gemini-cli를 사용하여 메일 발송
+    // UTF-8 명시 및 HTML 형식을 강조하는 프롬프트로 수정
+    const command = `gemini.cmd -y "jeew0n.lee.217@gmail.com 계정으로 이메일을 보내줘. 제목은 '${subject}'이야. 본문은 'email_body.html' 파일 안에 들어있어. 이 파일은 UTF-8로 저장되어 있고 HTML 형식이니, 글자가 깨지지 않게 주의해서 HTML 메일로 보내줘."`;
+    execSync(command);
+    console.log('Email sent successfully via Gemini CLI.');
+} catch (error) {
+    console.error('Failed to send email:', error);
+} finally {
+    if (fs.existsSync('email_body.html')) fs.unlinkSync('email_body.html');
+}
