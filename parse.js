@@ -29,9 +29,10 @@ function saveHistory(history) {
     fs.writeFileSync(HISTORY_FILE, JSON.stringify(history, null, 2), 'utf8');
 }
 
-// 링크 정규화: jsessionid 제거 및 핵심 파라미터(b_idx, internId, id)만 유지
+// 링크 정규화: jsessionid 제거 및 핵심 파라미터(b_idx, internId, id, youthId)만 유지
 function normalizeLink(link) {
     if (!link) return '';
+    
     // 1. jsessionid 부분만 제거
     let normalized = link.replace(/;jsessionid=[^?#]*/, '');
     
@@ -40,18 +41,11 @@ function normalizeLink(link) {
         const params = urlObj.searchParams;
         const newParams = new URLSearchParams();
         
-        // 핵심 식별자 보존 (id 추가)
+        // 핵심 식별자 보존
         if (params.has('b_idx')) newParams.set('b_idx', params.get('b_idx'));
         if (params.has('internId')) newParams.set('internId', params.get('internId'));
-        if (params.has('id')) newParams.set('internId', params.get('id')); // id도 internId로 통일하여 체크
-        
-        // 2030db.go.kr의 경우 경로가 계속 바뀌므로 ID가 있다면 경로를 통일함
-        if (urlObj.hostname.includes('2030db.go.kr')) {
-            const id = newParams.get('internId');
-            if (id) {
-                return `https://www.2030db.go.kr/intern/detail?internId=${id}`;
-            }
-        }
+        if (params.has('id')) newParams.set('internId', params.get('id'));
+        if (params.has('youthId')) newParams.set('youthId', params.get('youthId'));
         
         const queryString = newParams.toString();
         return queryString ? `${urlObj.origin}${urlObj.pathname}?${queryString}` : `${urlObj.origin}${urlObj.pathname}`;
@@ -116,18 +110,19 @@ function parseYouth() {
     if (rows) {
         rows.forEach(row => {
             const titleMatch = row.match(/<a[^>]*?>([\s\S]*?)<\/a>/);
-            const linkMatch = row.match(/href="([^"]*?)"/);
-            const periodMatch = row.match(/\d{4}\.\d{2}\.\d{2}\s*~\s*\d{4}\.\d{2}\.\d{2}/);
+            const idMatch = row.match(/fn_selectYouthInternDetail\s*\(\s*'([^']+)'/);
+            const periodMatch = row.match(/\d{4}\.\d{2}\.\d.2}\s*~\s*\d{4}\.\d{2}\.\d{2}/);
             const orgMatch = row.match(/<td[^>]*?class="org"[^>]*?>([\s\S]*?)<\/td>/) || row.match(/<td[^>]*?>([^<]*?)<\/td>/g);
             
-            if (titleMatch && linkMatch) {
+            if (titleMatch && idMatch) {
                 let org = 'N/A';
                 if (orgMatch && orgMatch.length > 2) {
                     org = orgMatch[2].replace(/<[^>]*>?/gm, '').trim();
                 }
+                const youthId = idMatch[1];
                 posts.push({
                     title: titleMatch[1].replace(/<[^>]*>?/gm, '').trim(),
-                    link: 'https://www.2030db.go.kr' + linkMatch[1],
+                    link: `https://www.2030db.go.kr/user/youthIntern/selectYouthInternDetail.do?youthId=${youthId}`,
                     period: periodMatch ? periodMatch[0] : 'N/A',
                     org: org
                 });

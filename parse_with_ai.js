@@ -34,7 +34,14 @@ async function parseAll() {
 
         try {
             // gemini-cli를 호출하여 JSON 추출
-            const prompt = `다음 HTML에서 채용 공고 리스트를 추출해줘. JSON 형식 [{ "title": "...", "link": "...", "date": "...", "org": "..." }]으로만 답변해. 링크는 절대경로가 아니면 도메인(etri: https://www.etri.re.kr, btp: https://www.btp.or.kr, youth: https://www.2030db.go.kr)을 붙여줘. \n\nHTML:\n${cleanHtml}`;
+            const prompt = `다음 HTML에서 채용 공고 리스트를 추출해줘. JSON 형식 [{ "title": "...", "link": "...", "date": "...", "org": "..." }]으로만 답변해.
+링크 추출 시 주의사항:
+1. etri: https://www.etri.re.kr 도메인을 붙여줘.
+2. btp: https://www.btp.or.kr 도메인을 붙여줘.
+3. youth (2030db.go.kr): fn_selectYouthInternDetail('ID', ...) 함수 호출에서 ID를 추출하여 'https://www.2030db.go.kr/user/youthIntern/selectYouthInternDetail.do?youthId=ID' 형식의 직접 링크를 생성해줘.
+
+HTML:
+${cleanHtml}`;
             
             // 임시 프롬프트 파일 생성 (명령행 길이 제한 방지)
             fs.writeFileSync('temp_prompt.txt', prompt, 'utf8');
