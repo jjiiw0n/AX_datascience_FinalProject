@@ -53,19 +53,38 @@ const newResults = {
     youth: []
 };
 
+// 30일(밀리초) 계산
+const ONE_MONTH_MS = 30 * 24 * 60 * 60 * 1000;
+const now = Date.now();
+
 // 중복 제거 및 신규 항목 추출
 Object.keys(currentResults).forEach(site => {
     if (!history[site]) history[site] = [];
     
+    // 1. 오래된 데이터 삭제 (30일 초과) 및 구조 마이그레이션 (기존 string -> object)
+    history[site] = history[site].filter(record => {
+        // 기존 포맷(string)일 경우, 안전하게 유지하기 위해 오래되지 않은 것으로 간주
+        if (typeof record === 'string') return true;
+        // 새 포맷(object)일 경우, timestamp 확인
+        return (now - record.timestamp) < ONE_MONTH_MS;
+    });
+
     const siteData = currentResults[site];
     if (Array.isArray(siteData)) {
         siteData.forEach(post => {
             const normalizedLink = normalizeLink(post.link);
             const cleanTitle = post.title.trim();
             const postKey = `${cleanTitle}_${normalizedLink}`;
-            if (!history[site].includes(postKey)) {
+            
+            // history에 이미 존재하는지 확인 (기존 string포맷과 새 object 포맷 모두 대응)
+            const isExists = history[site].some(record => 
+                (typeof record === 'string' && record === postKey) || 
+                (typeof record === 'object' && record.key === postKey)
+            );
+
+            if (!isExists) {
                 newResults[site].push(post);
-                history[site].push(postKey);
+                history[site].push({ key: postKey, timestamp: now });
             }
         });
     }
