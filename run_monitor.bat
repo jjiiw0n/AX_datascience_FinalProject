@@ -4,14 +4,10 @@ setlocal enabledelayedexpansion
 :: 한글 깨짐 방지를 위한 UTF-8 코드페이지 설정
 chcp 65001 > nul
 
-:: 요일 체크 (금요일: 5, 토요일: 6)
+:: 요일 체크 (금요일: 5)
 for /f %%a in ('powershell -Command "([int](Get-Date).DayOfWeek)"') do set "day=%%a"
-if "%day%"=="5" (
-    echo Today is Friday. Monitoring is skipped per policy.
-    exit /b 0
-)
-if "%day%"=="6" (
-    echo Today is Saturday. Monitoring is skipped per policy.
+if not "%day%"=="5" (
+    echo Today is not Friday. Monitoring is skipped per policy.
     exit /b 0
 )
 
@@ -37,6 +33,11 @@ node filter.js
 
 echo [Step 4] 알림 메일 발송 (Notifying)...
 node notify.js
+
+echo [Step 5] 주간 통합 뉴스레터 발송 시작 (Friday Special)...
+node scrape_news.js
+node summarize_news.js
+node notify_newsletter.js
 
 echo 모든 작업이 성공적으로 완료되었습니다.
 pause
