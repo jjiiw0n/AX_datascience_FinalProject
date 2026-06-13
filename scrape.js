@@ -3,11 +3,11 @@ const fs = require('fs');
 const path = require('path');
 
 async function scrape() {
-    // 요일 체크 (금요일: 5, 토요일: 6) - 금/토 실행 스킵
+    // 요일 체크 (토요일: 6) - 토요일 실행 스킵
     const now = new Date();
     const dayOfWeek = now.getDay();
-    if (dayOfWeek === 5 || dayOfWeek === 6) {
-        console.log(`Today is ${dayOfWeek === 5 ? 'Friday' : 'Saturday'}. Monitoring is skipped per policy.`);
+    if (dayOfWeek === 6) {
+        console.log(`Today is Saturday. Monitoring is skipped per policy.`);
         process.exit(0);
     }
 
