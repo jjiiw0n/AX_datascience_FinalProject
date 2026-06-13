@@ -1,105 +1,42 @@
-# 📩 Personalized Career Newsletter System
+# 📩 개인 맞춤형 커리어 뉴스레터 시스템
 
-> Gemini AI Agent와 Playwright MCP를 기반으로,  
-> 사용자가 지정한 웹사이트의 신규 정보를 자동 수집·분석·전달하는 **AI 기반 커리어 뉴스레터 자동화 시스템**
+> **관심 있는 사이트의 소식을 AI가 대신 확인하고, 놓치지 말아야 할 공고만 깔끔하게 정리하여 매주 뉴스레터로 보내드립니다.**
 
-기존의 정보 플랫폼은 사용자가 직접 여러 웹사이트를 방문하며 기업 소식, 채용 공고, 기술 동향 등을 반복적으로 확인해야 한다는 한계가 있습니다.  
-본 프로젝트는 이러한 탐색 과정을 자동화하여, 관심 분야의 최신 정보를 뉴스레터 형태로 통합하고 Gmail로 주기적으로 전달하는 것을 목표로 합니다.
+매번 기업 채용 페이지나 기술 게시판을 직접 찾아다니는 시간 낭비를 끝내세요. 본 서비스는 여러분을 대신해 웹사이트를 모니터링하고, 중요한 정보만 선별하여 가장 익숙한 이메일로 받아볼 수 있게 도와주는 **개인 AI 커리어 비서**입니다.
 
 ---
 
-## ✨ Features
+## ✨ 핵심 기능
 
-- 🔍 **Automated Website Monitoring**  
-  지정된 웹사이트를 주기적으로 탐색하여 신규 게시물 자동 탐지
+- **자동 밀착 모니터링**  
+  AI가 24시간 여러분의 관심 사이트를 확인하여 신규 게시물을 실시간으로 탐지합니다.
 
-- 🤖 **AI Skill-based Processing**  
-  Gemini AI Agent가 Skill 문서를 기반으로 사이트별 수집 로직 수행
+- **스마트 공고 선별**  
+  수많은 공고 중, 이미 확인한 정보는 자동으로 걸러내고 여러분에게 진짜 필요한 정보만 선별하여 100% 신뢰도 있는 데이터만 제공합니다.
 
-- 🧠 **Smart Keyword Filtering**  
-  특정 키워드(예: `부산지역인재`)가 포함된 게시물만 선별 수집
+- **통합 커리어 뉴스레터**  
+  여러 사이트의 정보를 하나로 취합하여, 가장 편한 환경인 **Gmail**을 통해 매주 뉴스레터 형태로 전달합니다.
 
-- 🗂 **Integrated Data Management (Gmail Search DB)**  
-  실제 발송된 메일 이력을 전체 메일함에서 검색하여 중복 수집을 방지하는 Event-Log 기반 DB 전략 채택 (제목+링크+등록일 교차 검증)
-
-- 📬 **Consolidated Gmail Notification**  
-  모든 사이트의 결과를 하나의 통합 뉴스레터로 취합하여 Gmail로 자동 전송
-
-- ⏰ **Scheduled Execution**  
-  Windows Task Scheduler 기반 주기적 자동 실행
+- **안정적인 무인 운영**  
+  시스템이 알아서 주기적으로 실행되며, 브라우저 관리부터 데이터 정리까지 스스로 수행하여 운영에 전혀 손이 가지 않습니다.
 
 ---
 
-## 🏗 System Architecture
+## ⚙️ 어떻게 작동하나요?
 
-```mermaid
-graph TD
-    A[Windows Task Scheduler] -->|1 Hour Interval| B(run_monitor.bat)
-    B --> C[Gemini AI Agent]
-    C -->|Read Logic| D[SKILL.md Modules]
-    C -->|Scrape| E[Playwright MCP]
-    C -->|Check/Record| F[Gmail Search DB]
-    C -->|Notify| G[Gmail API]
-```
+서비스는 다음 4단계 과정을 거쳐 작동합니다.
+
+1. **자동 수집**: 지정된 사이트를 주기적으로 방문하여 최신 게시물 데이터를 가져옵니다.
+2. **AI 분석**: AI가 가져온 정보의 내용을 파악하여 핵심 정보를 분류합니다.
+3. **중복 필터링**: 히스토리 데이터를 대조하여 이미 본 공고는 자동으로 제외합니다.
+4. **뉴스레터 발송**: 모든 정보를 정리하여 하나의 이메일로 이쁘게 포장해 전송합니다.
 
 ---
 
-## 📂 Project Structure
+## 🏗 시스템 아키텍처 및 기술
 
-```bash
-AX_datascience_FinalProject/
-├── integrated-web-monitor/
-│   ├── sites/                # 사이트별 수집 로직
-│   ├── infra/                # 인프라 및 스케줄러 설정
-│   └── SKILL.md              # 통합 Skill 인덱스
-├── project.md                # 프로젝트 기획 및 개발 기록
-├── run_monitor.bat           # 자동화 실행 파일
-└── README.md
-```
-
----
-
-## 🚀 Getting Started
-
-### 1. Environment Setup
-
-다음 환경이 사전에 구성되어 있어야 합니다.
-
-- Gemini CLI
-- Playwright MCP
-- Google Workspace MCP
-
-### 2. Run
-
-```bash
-run_monitor.bat
-```
-
-또는 Gemini CLI에서:
-
-```text
-통합 웹 모니터링 스킬 실행해줘
-```
-
----
-
-## 🌱 Branch Strategy
-
-| Branch | Description |
-|---|---|
-| `main` | 안정화된 통합 브랜치 |
-| `feature/site-*` | 신규 사이트 수집 기능 개발 |
-| `feature/infra-*` | 인프라 및 자동화 기능 개선 |
-
----
-
-## 📌 Tech Stack
-
-- Gemini AI Agent
-- Playwright MCP
-- Google Docs API
-- Gmail API
-- Windows Task Scheduler
+- **하이브리드 엔진**: Playwright의 신속한 크롤링과 Gemini AI의 지능형 분석을 결합하였습니다.
+- **기술 스택**: AI/LLM(Gemini), 자동화(Playwright), 발송(Nodemailer/SMTP), 환경(Windows Task Scheduler)
 
 ---
 
@@ -107,4 +44,4 @@ run_monitor.bat
 
 **jjiiw0n**  
 
-프로젝트 상세 개발 기록 및 시행착오는 `project.md`에서 확인할 수 있습니다.
+*프로젝트의 상세한 시행착오 및 기술적 해결 과정은 `project.md` 파일에서 확인하실 수 있습니다.*
