@@ -33,7 +33,7 @@
   </Triggers>
   <Actions Context="Author">
     <Exec>
-      <Command>C:\Users\zzib0\Downloads\AX_datascience\final_project\run_monitor.bat</Command>
+      <Command>C:\Users\zzib0\Downloads\AX_datascience\final_project\legacy\windows\run_monitor.bat</Command>
     </Exec>
   </Actions>
 </Task>

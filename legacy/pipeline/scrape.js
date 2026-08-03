@@ -33,7 +33,7 @@ async function scrape() {
         const youthPage = await context.newPage();
         await youthPage.goto('https://www.2030db.go.kr/user/youthIntern/selectYouthInternList.do', { waitUntil: 'networkidle' });
         const youthHtml = await youthPage.content();
-        fs.writeFileSync('youth.html', youthHtml, 'utf8');
+        fs.writeFileSync('data/legacy/youth.html', youthHtml, 'utf8');
         await youthPage.close();
 
         console.log('Scraping completed successfully.');

@@ -1,8 +1,8 @@
 const fs = require('fs');
 
-const HISTORY_FILE = 'history.json';
-const RESULTS_FILE = 'results.json';
-const NEW_RESULTS_FILE = 'new_results.json';
+const HISTORY_FILE = 'data/legacy/history.json';
+const RESULTS_FILE = 'data/legacy/results.json';
+const NEW_RESULTS_FILE = 'data/legacy/new_results.json';
 
 // 요일 체크 로직 (운영 시 필요하면 활성화)
 // ...

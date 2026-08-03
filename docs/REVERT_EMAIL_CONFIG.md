@@ -5,10 +5,10 @@
 ## 복구 단계
 
 1. **파일 교체:**
-   - 기존의 `notify.js`를 다른 이름으로 백업합니다 (예: `notify_smtp.js`).
-   - 백업해 두었던 `notify_ai.js`의 내용을 `notify.js`에 덮어씁니다.
+   - `legacy/pipeline/notify.js`를 다른 이름으로 백업합니다 (예: `notify_smtp.js`).
+   - 백업해 두었던 `legacy/pipeline/notify_ai.js`의 내용을 `legacy/pipeline/notify.js`에 덮어씁니다.
      ```bash
-     cp notify_ai.js notify.js
+     cp legacy/pipeline/notify_ai.js legacy/pipeline/notify.js
      ```
 
 2. **의존성 정리 (선택 사항):**

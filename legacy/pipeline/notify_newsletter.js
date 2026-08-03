@@ -5,17 +5,17 @@ const nodemailer = require('nodemailer');
 async function notifyNewsletter() {
     console.log('Generating Newsletter Email (Code-based)...');
     
-    if (!fs.existsSync('new_results.json') || !fs.existsSync('news_selected.json')) {
+    if (!fs.existsSync('data/legacy/new_results.json') || !fs.existsSync('data/legacy/news_selected.json')) {
         console.error('Data files not found!');
         return;
     }
 
-    const jobResults = JSON.parse(fs.readFileSync('new_results.json', 'utf8'));
-    const newsData = JSON.parse(fs.readFileSync('news_selected.json', 'utf8'));
+    const jobResults = JSON.parse(fs.readFileSync('data/legacy/new_results.json', 'utf8'));
+    const newsData = JSON.parse(fs.readFileSync('data/legacy/news_selected.json', 'utf8'));
     
     let insight = "이번 주 최신 산업 및 기술 동향을 전해드립니다.";
-    if (fs.existsSync('news_insight.txt')) {
-        insight = fs.readFileSync('news_insight.txt', 'utf8').trim();
+    if (fs.existsSync('data/legacy/news_insight.txt')) {
+        insight = fs.readFileSync('data/legacy/news_insight.txt', 'utf8').trim();
     }
 
     const today = new Date().toLocaleDateString('ko-KR');

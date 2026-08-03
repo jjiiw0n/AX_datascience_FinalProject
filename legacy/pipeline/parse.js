@@ -9,7 +9,7 @@ if (dayOfWeek === 6) {
     process.exit(0);
 }
 
-const HISTORY_FILE = 'history.json';
+const HISTORY_FILE = 'data/legacy/history.json';
 
 // 히스토리 로드
 function loadHistory() {
@@ -54,8 +54,8 @@ function normalizeLink(link) {
 }
 
 function parseEtri() {
-    if (!fs.existsSync('etri.html')) return [];
-    const html = fs.readFileSync('etri.html', 'utf8');
+    if (!fs.existsSync('data/legacy/etri.html')) return [];
+    const html = fs.readFileSync('data/legacy/etri.html', 'utf8');
     const posts = [];
     const tbodyMatch = html.match(/<tbody>([\s\S]*?)<\/tbody>/);
     if (tbodyMatch) {
@@ -79,8 +79,8 @@ function parseEtri() {
 }
 
 function parseBtp() {
-    if (!fs.existsSync('btp.html')) return [];
-    const html = fs.readFileSync('btp.html', 'utf8');
+    if (!fs.existsSync('data/legacy/btp.html')) return [];
+    const html = fs.readFileSync('data/legacy/btp.html', 'utf8');
     const posts = [];
     const rows = html.match(/<tr>([\s\S]*?)<\/tr>/g);
     if (rows) {
@@ -103,8 +103,8 @@ function parseBtp() {
 }
 
 function parseYouth() {
-    if (!fs.existsSync('youth.html')) return [];
-    const html = fs.readFileSync('youth.html', 'utf8');
+    if (!fs.existsSync('data/legacy/youth.html')) return [];
+    const html = fs.readFileSync('data/legacy/youth.html', 'utf8');
     const posts = [];
     const rows = html.match(/<tr[^>]*?>([\s\S]*?)<\/tr>/g);
     if (rows) {
@@ -160,8 +160,8 @@ Object.keys(currentResults).forEach(site => {
 });
 
 // 결과 저장
-fs.writeFileSync('results.json', JSON.stringify(currentResults, null, 2), 'utf8');
-fs.writeFileSync('new_results.json', JSON.stringify(newResults, null, 2), 'utf8');
+fs.writeFileSync('data/legacy/results.json', JSON.stringify(currentResults, null, 2), 'utf8');
+fs.writeFileSync('data/legacy/new_results.json', JSON.stringify(newResults, null, 2), 'utf8');
 saveHistory(history);
 
 console.log('--- Monitoring Report ---');

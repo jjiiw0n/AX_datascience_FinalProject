@@ -6,3 +6,14 @@ service-account-key.json
 *.html
 .env
 node_modules/
+
+# Legacy pipeline runtime outputs
+data/legacy/history.json
+data/legacy/new_results.json
+data/legacy/results.json
+data/legacy/news_selected.json
+data/legacy/news_summary.txt
+data/legacy/news_insight.txt
+data/legacy/news_insight_prompt.txt
+data/legacy/temp_prompt.txt
+data/legacy/email_body.html

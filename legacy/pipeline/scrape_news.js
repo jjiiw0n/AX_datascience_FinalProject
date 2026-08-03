@@ -77,7 +77,7 @@ async function scrapeNews() {
         }
         await defPage.close();
 
-        fs.writeFileSync('news_selected.json', JSON.stringify(results, null, 2), 'utf8');
+        fs.writeFileSync('data/legacy/news_selected.json', JSON.stringify(results, null, 2), 'utf8');
         console.log('Successfully saved news_selected.json');
         console.log(`Final Count: Science(${results.science.length}), AI(${results.ai.length}), Defense(${results.defense.length})`);
 

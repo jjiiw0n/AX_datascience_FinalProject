@@ -1,10 +1,13 @@
 {
   "name": "final_project",
   "version": "1.0.0",
-  "description": "> Gemini AI Agent와 Playwright MCP를 기반으로,  \r > 사용자가 지정한 웹사이트의 신규 정보를 자동 수집·분석·전달하는 **AI 기반 커리어 뉴스레터 자동화 시스템**",
-  "main": "parse.js",
+  "description": "GitHub Actions, Playwright, Supabase를 이용한 커리어 뉴스레터 자동화 서비스",
+  "main": "monitor_v2.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "start": "node monitor_v2.js",
+    "monitor": "node monitor_v2.js",
+    "check": "node --check monitor_v2.js && node --check lib/supabase.js",
+    "test": "npm run check"
   },
   "repository": {
     "type": "git",

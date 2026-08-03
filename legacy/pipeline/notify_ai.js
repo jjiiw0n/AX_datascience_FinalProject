@@ -73,7 +73,7 @@ function generateHtml(newResults) {
     return { html, totalNew };
 }
 
-const NEW_RESULTS_FILE = 'new_results.json';
+const NEW_RESULTS_FILE = 'data/legacy/new_results.json';
 if (!fs.existsSync(NEW_RESULTS_FILE)) {
     console.log('new_results.json not found. Skipping notification.');
     process.exit(0);
@@ -89,16 +89,16 @@ const subject = totalNew > 0
 console.log(`Sending email: ${subject}`);
 
 // HTML 본문을 파일로 저장
-fs.writeFileSync('email_body.html', html, 'utf8');
+fs.writeFileSync('data/legacy/email_body.html', html, 'utf8');
 
 try {
     // gemini-cli를 사용하여 메일 발송
     // UTF-8 명시 및 HTML 형식을 강조하는 프롬프트로 수정
-    const command = `gemini.cmd -y "jeew0n.lee.217@gmail.com 계정으로 이메일을 보내줘. 제목은 '${subject}'이야. 본문은 'email_body.html' 파일 안에 들어있어. 이 파일은 UTF-8로 저장되어 있고 HTML 형식이니, 글자가 깨지지 않게 주의해서 HTML 메일로 보내줘."`;
+    const command = `gemini.cmd -y "jeew0n.lee.217@gmail.com 계정으로 이메일을 보내줘. 제목은 '${subject}'이야. 본문은 'data/legacy/email_body.html' 파일 안에 들어있어. 이 파일은 UTF-8로 저장되어 있고 HTML 형식이니, 글자가 깨지지 않게 주의해서 HTML 메일로 보내줘."`;
     execSync(command);
     console.log('Email sent successfully via Gemini CLI.');
 } catch (error) {
     console.error('Failed to send email:', error);
 } finally {
-    if (fs.existsSync('email_body.html')) fs.unlinkSync('email_body.html');
+    if (fs.existsSync('data/legacy/email_body.html')) fs.unlinkSync('data/legacy/email_body.html');
 }
