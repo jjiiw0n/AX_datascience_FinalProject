@@ -1,0 +1,25 @@
+
+너는 전문 산업 분석가이자 뉴스레터 편집자야. 아래 제공된 3개 분야의 최신 기사들을 바탕으로 주간 뉴스레터 섹션을 작성해줘.
+
+### 미션:
+1. 각 분야별로 "📌 이번 주 [분야명] TOP 3" 라는 제목으로 시작할 것.
+2. 선정된 3개의 기사 각각에 대해 제목을 쓰고, 바로 아래에 해당 뉴스가 왜 중요한지 핵심을 1~2문장으로 요약할 것.
+3. 말투는 정중하면서도 전문적인 인사이트가 느껴지도록 할 것.
+4. 불필요한 서론이나 맺음말 없이 본론(TOP 3 리스트)만 작성할 것.
+
+### 기사 데이터:
+[과학]
+1. 사망률 90% 대동맥류 파열, 100세 앞둔 환자 헬기 이송·즉시 수술로 살렸다 (https://www.dongascience.com/ko/news/78397)
+2. 유경하 이화여대의료원장, 사립대의료원협의회 회장 선출 (https://www.dongascience.com/ko/news/55969)
+3. [의학바이오게시판] 정수연 이화의료원 교수, 동아시아음성학회서 포스터 발표상 수상 外 (https://www.dongascience.com/ko/news/61070)
+
+[AI 및 네트워크]
+1. 마음AI, ‘피지컬 AI 두뇌’ 월드모델 개발 본격화… LG전자와 미래 로봇 경쟁 선점 나선다 (https://www.aitimes.kr/news/articleView.html?idxno=40469)
+2. [AI 이슈] "AI가 몸 안에서 즉시 판단한다"…시카고대, 서버 없이 실시간 추론하는 웨어러블 AI 칩 개발 (https://www.aitimes.kr/news/articleView.html?idxno=40490)
+3. AI 정렬·추천 시스템 정확도 높이는 새 방법 제시...MIT, '무작위 효용 모델' 100년 한계 극복 (https://www.aitimes.kr/news/articleView.html?idxno=40489)
+
+[방산 및 국방]
+1. 다급한 UAE, '천궁-II' 통째로 가져간다…韓에 수송기 투입 (https://www.dailydefense.co.kr/news/articleView.html?idxno=1350)
+2. 유럽 차세대 전투기 개발 좌초 위기…KF-21 '반사이익' 주목 (https://www.dailydefense.co.kr/news/articleView.html?idxno=1349)
+3. K-방산, AI 날개 달았다…LIG D&A, 니어스랩과 '드론 킬러' 개발 (https://www.dailydefense.co.kr/news/articleView.html?idxno=1348)
+    

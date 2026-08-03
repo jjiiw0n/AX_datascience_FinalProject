@@ -4,10 +4,10 @@ setlocal enabledelayedexpansion
 :: 한글 깨짐 방지를 위한 UTF-8 코드페이지 설정
 chcp 65001 > nul
 
-:: 요일 체크 (금요일: 5)
+:: 요일 체크 (토요일: 6) - 토요일은 스킵
 for /f %%a in ('powershell -Command "([int](Get-Date).DayOfWeek)"') do set "day=%%a"
-if not "%day%"=="5" (
-    echo Today is not Friday. Monitoring is skipped per policy.
+if "%day%"=="6" (
+    echo Today is Saturday. Monitoring is skipped per policy.
     exit /b 0
 )
 

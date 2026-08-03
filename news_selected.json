@@ -1,0 +1,44 @@
+{
+  "science": [
+    {
+      "title": "NEWS\n日 규모 7.1 강진 피해 왜 컸나…진원 깊이 불과 10km\n\n1주일간 최대 진도 7 수준 추가 강진 가능성도",
+      "link": "https://www.dongascience.com/ko/news/79162"
+    },
+    {
+      "title": "동일본대지진으로 일본 열도 수mm 이동…원인은 반사된 지진파였다",
+      "link": "https://www.dongascience.com/ko/news/78513"
+    },
+    {
+      "title": "암세포가 '여기 있다' 알리는 면역항암·유전자치료 플랫폼",
+      "link": "https://www.dongascience.com/ko/news/79146"
+    }
+  ],
+  "ai": [
+    {
+      "title": "구성원 AX 아이디어 도입해 업무생산성 높인다!...LG전자, ‘모두의 AX’로 일하는 방식 혁신 속도",
+      "link": "https://www.aitimes.kr/news/articleView.html?idxno=41216"
+    },
+    {
+      "title": "의료 AI 시대 연다...ETRI, 생체신호 압축기술 국제표준 채택",
+      "link": "https://www.aitimes.kr/news/articleView.html?idxno=41214"
+    },
+    {
+      "title": "SKT, 독파모 2차 모델 공개…688B 규모 초거대 모델 A.X K2와 멀티모달 위한 경량 모델 3종",
+      "link": "https://www.aitimes.kr/news/articleView.html?idxno=41213"
+    }
+  ],
+  "defense": [
+    {
+      "title": "AI가 전장 판단 돕는다…LIG·LG, 초거대 LLM 공동개발",
+      "link": "https://www.dailydefense.co.kr/news/articleView.html?idxno=1627"
+    },
+    {
+      "title": "한화에어로, 49개 협력사와 항공엔진 상생협력 MOU 체결",
+      "link": "https://www.dailydefense.co.kr/news/articleView.html?idxno=1616"
+    },
+    {
+      "title": "LIG D&A-英 밥콕, 전략적 협력…AH-140 호위함 공동개발",
+      "link": "https://www.dailydefense.co.kr/news/articleView.html?idxno=1610"
+    }
+  ]
+}

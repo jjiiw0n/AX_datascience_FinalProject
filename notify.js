@@ -5,12 +5,17 @@ const nodemailer = require('nodemailer');
 function generateHtml(newResults) {
     let html = `
     <div style="font-family: 'Malgun Gothic', sans-serif; max-width: 800px; margin: 0 auto; padding: 20px; border: 1px solid #eee;">
+        <!-- 알림 일시 중단 안내 멘트 추가 -->
+        <div style="background-color: #fff3cd; border: 1px solid #ffeeba; color: #856404; padding: 15px; border-radius: 5px; margin-bottom: 20px; text-align: center; font-weight: bold;">
+            ⚠️ 알림 설정 안내: 본인 요청으로 '부산지역인재' 및 'ETRI' 채용공고 알림을 일시 중단 중입니다.
+        </div>
+
         <h2 style="color: #333; border-bottom: 2px solid #1a73e8; padding-bottom: 10px;">🚀 웹 모니터링 통합 리포트</h2>
     `;
 
     const sites = [
-        { key: 'etri', name: 'ETRI 한국전자통신연구원', cols: ['제목', '날짜', '링크'] },
-        { key: 'btp', name: 'BTP 부산테크노파크 (부산지역인재)', cols: ['제목', '날짜', '링크'] },
+        // { key: 'etri', name: 'ETRI 한국전자통신연구원', cols: ['제목', '날짜', '링크'] },
+        // { key: 'btp', name: 'BTP 부산테크노파크 (부산지역인재)', cols: ['제목', '날짜', '링크'] },
         { key: 'youth', name: '2030 청년인턴 모집', cols: ['제목', '기간', '기관', '링크'] }
     ];
 

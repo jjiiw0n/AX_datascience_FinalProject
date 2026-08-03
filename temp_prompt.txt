@@ -1,0 +1,303 @@
+다음 HTML에서 채용 공고 리스트를 추출해줘. JSON 형식 [{ "title": "...", "link": "...", "date": "...", "org": "..." }]으로만 답변해.
+링크 추출 시 주의사항:
+1. etri: https://www.etri.re.kr 도메인을 붙여줘.
+2. btp: https://www.btp.or.kr 도메인을 붙여줘.
+3. youth (2030db.go.kr): fn_selectYouthInternDetail('ID', ...) 함수 호출에서 ID를 추출하여 'https://www.2030db.go.kr/user/youthIntern/selectYouthInternDetail.do?youthId=ID' 형식의 직접 링크를 생성해줘.
+
+HTML:
+<tbody>
+                    
+                    
+                    
+                    
+                        <tr>
+                            <td>1300</td>
+                            <td>
+                                
+                                    
+                                    
+                                        면접
+                                    
+                                
+                            </td>
+                            <td>
+                                
+                                    
+                                    
+                                    
+                                        <span class="box_1776E1" title="접수진행">접수진행</span>
+                                    
+                                
+                            </td>
+                            <td>
+                                <a href="#view" onclick="return fn_selectYouthInternDetail('INTERN_0000000044301', 'searchForm');" title="상세보기">2026년 하반기 국토교통부(제주지방항공청) 청년인턴 채용시험 최종합격자 공고</a>
+                            </td>
+                            <td>국토교통부</td>
+                            <td class="recruit-dttm">
+                                    2026-08-03 ~ 2026-08-04
+                            </td>
+                            <td>22</td>
+                        </tr>
+                    
+                        <tr>
+                            <td>1299</td>
+                            <td>
+                                
+                                    
+                                    
+                                        면접
+                                    
+                                
+                            </td>
+                            <td>
+                                
+                                    
+                                    
+                                    
+                                        <span class="box_1776E1" title="접수진행">접수진행</span>
+                                    
+                                
+                            </td>
+                            <td>
+                                <a href="#view" onclick="return fn_selectYouthInternDetail('INTERN_0000000044300', 'searchForm');" title="상세보기">2026년 하반기 국토교통부(서울지방항공청) 청년인턴 채용시험 최종합격자 공고</a>
+                            </td>
+                            <td>국토교통부</td>
+                            <td class="recruit-dttm">
+                                    2026-08-03 ~ 2026-08-04
+                            </td>
+                            <td>35</td>
+                        </tr>
+                    
+                        <tr>
+                            <td>1298</td>
+                            <td>
+                                
+                                    
+                                        서류
+                                    
+                                    
+                                
+                            </td>
+                            <td>
+                                
+                                    
+                                        <span class="box_8191A5" title="접수대기">접수대기</span>
+                                    
+                                    
+                                    
+                                
+                            </td>
+                            <td>
+                                <a href="#view" onclick="return fn_selectYouthInternDetail('INTERN_0000000044297', 'searchForm');" title="상세보기">2026년 제2차 문화체육관광부(국립광주박물관) 청년인턴 채용공고</a>
+                            </td>
+                            <td>문화체육관광부</td>
+                            <td class="recruit-dttm">
+                                    2026-08-11 ~ 2026-08-13
+                            </td>
+                            <td>27</td>
+                        </tr>
+                    
+                        <tr>
+                            <td>1297</td>
+                            <td>
+                                
+                                    
+                                    
+                                        면접
+                                    
+                                
+                            </td>
+                            <td>
+                                
+                                    
+                                    
+                                    
+                                        <span class="box_1776E1" title="접수진행">접수진행</span>
+                                    
+                                
+                            </td>
+                            <td>
+                                <a href="#view" onclick="return fn_selectYouthInternDetail('INTERN_0000000044293', 'searchForm');" title="상세보기"> 2026년 하반기 국토교통부(부산지방항공청) 청년인턴 채용시험 최종합격자 공고</a>
+                            </td>
+                            <td>국토교통부</td>
+                            <td class="recruit-dttm">
+                                    2026-08-03 ~ 2026-08-04
+                            </td>
+                            <td>29</td>
+                        </tr>
+                    
+                        <tr>
+                            <td>1296</td>
+                            <td>
+                                
+                                    
+                                        서류
+                                    
+                                    
+                                
+                            </td>
+                            <td>
+                                
+                                    
+                                    
+                                    
+                                        <span class="box_1776E1" title="접수진행">접수진행</span>
+                                    
+                                
+                            </td>
+                            <td>
+                                <a href="#view" onclick="return fn_selectYouthInternDetail('INTERN_0000000044292', 'searchForm');" title="상세보기">2026년 하반기 국토교통부(국토지리정보원) 청년인턴 채용시험 최종합격자 공고</a>
+                            </td>
+                            <td>국토교통부</td>
+                            <td class="recruit-dttm">
+                                    2026-08-03 ~ 2026-08-05
+                            </td>
+                            <td>32</td>
+                        </tr>
+                    
+                        <tr>
+                            <td>1295</td>
+                            <td>
+                                
+                                    
+                                        서류
+                                    
+                                    
+                                
+                            </td>
+                            <td>
+                                
+                                    
+                                        <span class="box_8191A5" title="접수대기">접수대기</span>
+                                    
+                                    
+                                    
+                                
+                            </td>
+                            <td>
+                                <a href="#view" onclick="return fn_selectYouthInternDetail('INTERN_0000000044289', 'searchForm');" title="상세보기">2026년 2차 문화체육관광부(국립춘천박물관) 청년인턴 채용 공고</a>
+                            </td>
+                            <td>문화체육관광부</td>
+                            <td class="recruit-dttm">
+                                    2026-08-11 ~ 2026-08-13
+                            </td>
+                            <td>30</td>
+                        </tr>
+                    
+                        <tr>
+                            <td>1294</td>
+                            <td>
+                                
+                                    
+                                    
+                                        면접
+                                    
+                                
+                            </td>
+                            <td>
+                                
+                                    
+                                    
+                                    
+                                        <span class="box_1776E1" title="접수진행">접수진행</span>
+                                    
+                                
+                            </td>
+                            <td>
+                                <a href="#view" onclick="return fn_selectYouthInternDetail('INTERN_0000000044285', 'searchForm');" title="상세보기">2026년 하반기 국토교통부(원주지방국토관리청) 청년인턴 채용시험 최종합격자 공고</a>
+                            </td>
+                            <td>국토교통부</td>
+                            <td class="recruit-dttm">
+                                    2026-08-03 ~ 2026-08-04
+                            </td>
+                            <td>29</td>
+                        </tr>
+                    
+                        <tr>
+                            <td>1293</td>
+                            <td>
+                                
+                                    
+                                        서류
+                                    
+                                    
+                                
+                            </td>
+                            <td>
+                                
+                                    
+                                        <span class="box_8191A5" title="접수대기">접수대기</span>
+                                    
+                                    
+                                    
+                                
+                            </td>
+                            <td>
+                                <a href="#view" onclick="return fn_selectYouthInternDetail('INTERN_0000000044284', 'searchForm');" title="상세보기">2026년 제2차 문화체육관광부(국립아시아문화전당 연구조사과) 청년인턴 채용 공고(학예)</a>
+                            </td>
+                            <td>문화체육관광부</td>
+                            <td class="recruit-dttm">
+                                    2026-08-11 ~ 2026-08-13
+                            </td>
+                            <td>65</td>
+                        </tr>
+                    
+                        <tr>
+                            <td>1292</td>
+                            <td>
+                                
+                                    
+                                    
+                                        면접
+                                    
+                                
+                            </td>
+                            <td>
+                                
+                                    
+                                    
+                                    
+                                        <span class="box_1776E1" title="접수진행">접수진행</span>
+                                    
+                                
+                            </td>
+                            <td>
+                                <a href="#view" onclick="return fn_selectYouthInternDetail('INTERN_0000000044282', 'searchForm');" title="상세보기">2026년 하반기 국토교통부(국토교통인재개발원) 청년인턴 채용시험 최종합격자 공고 </a>
+                            </td>
+                            <td>국토교통부</td>
+                            <td class="recruit-dttm">
+                                    2026-08-03 ~ 2026-08-05
+                            </td>
+                            <td>33</td>
+                        </tr>
+                    
+                        <tr>
+                            <td>1291</td>
+                            <td>
+                                
+                                    
+                                    
+                                        면접
+                                    
+                                
+                            </td>
+                            <td>
+                                
+                                    
+                                    
+                                    
+                                        <span class="box_1776E1" title="접수진행">접수진행</span>
+                                    
+                                
+                            </td>
+                            <td>
+                                <a href="#view" onclick="return fn_selectYouthInternDetail('INTERN_0000000044281', 'searchForm');" title="상세보기">2026년 2차 병무청 청년인턴(장애/홍보분야) 서류전형 합격자 발표 및 면접시험 공고</a>
+                            </td>
+                            <td>병무청</td>
+                            <td class="recruit-dttm">
+                                    2026-08-03 ~ 2026-08-11
+                            </td>
+                            <td>27</td>
+                        </tr>
+                    
+                    </tbody>

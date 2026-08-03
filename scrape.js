@@ -16,30 +16,17 @@ async function scrape() {
     const context = await browser.newContext();
 
     try {
-        // 1. ETRI
-        console.log('Scraping ETRI...');
-        const etriPage = await context.newPage();
-        await etriPage.goto('https://www.etri.re.kr/kor/bbs/list.etri?b_board_id=ETRI39', { waitUntil: 'networkidle' });
-        const etriHtml = await etriPage.content();
-        fs.writeFileSync('etri.html', etriHtml, 'utf8');
-        await etriPage.close();
+        /* 
+        // 1. ETRI - Paused per user request
+        console.log('Scraping ETRI (Paused)...');
+        // ... scraping logic commented out
+        */
 
-        // 2. BTP (Busan Techno Park) - with search
-        console.log('Scraping BTP...');
-        const btpPage = await context.newPage();
-        await btpPage.goto('https://www.btp.or.kr/kor/CMS/Board/Board.do?mCode=MN018', { waitUntil: 'networkidle' });
-        
-        // 검색어 입력 및 검색 수행
-        const searchInput = await btpPage.locator('input[name="searchKeyword"]').first();
-        await searchInput.fill('부산지역인재');
-        
-        // 검색 버튼 클릭 (엔터키 또는 버튼 클릭)
-        await searchInput.press('Enter');
-        await btpPage.waitForLoadState('networkidle');
-        
-        const btpHtml = await btpPage.content();
-        fs.writeFileSync('btp.html', btpHtml, 'utf8');
-        await btpPage.close();
+        /*
+        // 2. BTP (Busan Techno Park) - Paused per user request
+        console.log('Scraping BTP (Paused)...');
+        // ... scraping logic commented out
+        */
 
         // 3. Youth Intern
         console.log('Scraping Youth Intern...');

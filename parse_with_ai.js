@@ -3,8 +3,8 @@ const { execSync } = require('child_process');
 
 async function parseAll() {
     const sites = [
-        { name: 'etri', file: 'etri.html' },
-        { name: 'btp', file: 'btp.html' },
+        // { name: 'etri', file: 'etri.html' }, // Paused
+        // { name: 'btp', file: 'btp.html' },   // Paused
         { name: 'youth', file: 'youth.html' }
     ];
 
