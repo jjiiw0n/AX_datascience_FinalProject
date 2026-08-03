@@ -5,7 +5,7 @@ async function parseAll() {
     const sites = [
         // { name: 'etri', file: 'etri.html' }, // Paused
         // { name: 'btp', file: 'btp.html' },   // Paused
-        { name: 'youth', file: 'youth.html' }
+        { name: 'youth', file: 'data/legacy/youth.html' }
     ];
 
     const allResults = {};
@@ -44,9 +44,9 @@ HTML:
 ${cleanHtml}`;
             
             // 임시 프롬프트 파일 생성 (명령행 길이 제한 방지)
-            fs.writeFileSync('temp_prompt.txt', prompt, 'utf8');
+            fs.writeFileSync('data/legacy/temp_prompt.txt', prompt, 'utf8');
             
-            const output = execSync('gemini.cmd -y "temp_prompt.txt 내용을 읽고 지시대로 JSON만 출력해줘"', { encoding: 'utf8' });
+            const output = execSync('gemini.cmd -y "data/legacy/temp_prompt.txt 내용을 읽고 지시대로 JSON만 출력해줘"', { encoding: 'utf8' });
             
             // JSON 부분만 추출 (가끔 AI가 ```json ... ``` 을 붙일 수 있으므로)
             const jsonMatch = output.match(/\[\s*{[\s\S]*}\s*\]/);
@@ -62,11 +62,11 @@ ${cleanHtml}`;
         }
     }
 
-    fs.writeFileSync('results.json', JSON.stringify(allResults, null, 2), 'utf8');
+    fs.writeFileSync('data/legacy/results.json', JSON.stringify(allResults, null, 2), 'utf8');
     console.log('Successfully saved results.json');
     
     // 임시 파일 삭제
-    if (fs.existsSync('temp_prompt.txt')) fs.unlinkSync('temp_prompt.txt');
+    if (fs.existsSync('data/legacy/temp_prompt.txt')) fs.unlinkSync('data/legacy/temp_prompt.txt');
 }
 
 parseAll();

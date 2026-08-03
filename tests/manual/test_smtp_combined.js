@@ -5,8 +5,8 @@ const nodemailer = require('nodemailer');
 async function sendCombinedTest() {
     console.log('Preparing Combined SMTP Test Email...');
     
-    const jobResults = JSON.parse(fs.readFileSync('new_results.json', 'utf8'));
-    const newsData = JSON.parse(fs.readFileSync('news_selected.json', 'utf8'));
+    const jobResults = JSON.parse(fs.readFileSync('data/legacy/new_results.json', 'utf8'));
+    const newsData = JSON.parse(fs.readFileSync('data/legacy/news_selected.json', 'utf8'));
     
     // 1. 뉴스레터 섹션 생성 (JSON 기반 링크 포함)
     let newsletterHtml = '';

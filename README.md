@@ -1,47 +1,108 @@
-# 📩 개인 맞춤형 커리어 뉴스레터 시스템
+# Career Newsletter Service
 
-> **관심 있는 사이트의 소식을 AI가 대신 확인하고, 놓치지 말아야 할 공고만 깔끔하게 정리하여 매주 뉴스레터로 보내드립니다.**
+관심 채용 사이트의 새 게시물을 자동으로 수집하고, 구독자별 신규 정보를 이메일로 전달하는 커리어 뉴스레터 서비스입니다.
 
-매번 기업 채용 페이지나 기술 게시판을 직접 찾아다니는 시간 낭비를 끝내세요. 본 서비스는 여러분을 대신해 웹사이트를 모니터링하고, 중요한 정보만 선별하여 가장 익숙한 이메일로 받아볼 수 있게 도와주는 **개인 AI 커리어 비서**입니다.
+현재 운영 버전은 GitHub Actions에서 매일 실행되며, Playwright로 사이트를 수집하고 Supabase에서 구독자와 발송 이력을 관리합니다.
 
----
+## 주요 기능
 
-## ✨ 핵심 기능
+- ETRI, 부산테크노파크, 2030 청년인턴 게시판 자동 수집
+- 구독자별 모니터링 사이트 설정 조회
+- Supabase `crawl_history`를 이용한 중복 게시물 차단
+- Gmail SMTP를 통한 HTML 뉴스레터 발송
+- GitHub Actions 수동 실행 및 매일 정기 실행
 
-- **자동 밀착 모니터링**  
-  AI가 24시간 여러분의 관심 사이트를 확인하여 신규 게시물을 실시간으로 탐지합니다.
+## 운영 흐름
 
-- **스마트 공고 선별**  
-  수많은 공고 중, 이미 확인한 정보는 자동으로 걸러내고 여러분에게 진짜 필요한 정보만 선별하여 100% 신뢰도 있는 데이터만 제공합니다.
+```text
+GitHub Actions
+  → Node.js 22 / Playwright
+  → 채용 사이트 수집
+  → Supabase 구독자·이력 조회
+  → 신규 게시물 판별
+  → Gmail 뉴스레터 발송
+```
 
-- **통합 커리어 뉴스레터**  
-  여러 사이트의 정보를 하나로 취합하여, 가장 편한 환경인 **Gmail**을 통해 매주 뉴스레터 형태로 전달합니다.
+## 프로젝트 구조
 
-- **안정적인 무인 운영**  
-  시스템이 알아서 주기적으로 실행되며, 브라우저 관리부터 데이터 정리까지 스스로 수행하여 운영에 전혀 손이 가지 않습니다.
+```text
+.
+├─ .github/workflows/monitor.yml  # 운영 스케줄 및 실행 환경
+├─ lib/supabase.js                # Supabase 클라이언트
+├─ monitor_v2.js                  # 현재 운영 진입점
+├─ data/legacy/                   # 과거 로컬 파이프라인의 데이터·산출물
+├─ legacy/pipeline/               # 과거 단계별 수집·분석·발송 스크립트
+├─ legacy/windows/                # Windows 작업 스케줄러 자료
+├─ legacy/integrated-web-monitor/ # 과거 사이트·인프라 참고 문서
+├─ tests/manual/                  # 수동 SMTP·프롬프트 테스트
+├─ docs/                          # 운영 및 복구 문서
+├─ package.json
+└─ package-lock.json
+```
 
----
+## 요구 사항
 
-## ⚙️ 어떻게 작동하나요?
+- Node.js 22 이상
+- npm
+- Supabase 프로젝트와 필요한 테이블
+- Gmail 앱 비밀번호
 
-서비스는 다음 4단계 과정을 거쳐 작동합니다.
+## 환경 변수
 
-1. **자동 수집**: 지정된 사이트를 주기적으로 방문하여 최신 게시물 데이터를 가져옵니다.
-2. **AI 분석**: AI가 가져온 정보의 내용을 파악하여 핵심 정보를 분류합니다.
-3. **중복 필터링**: 히스토리 데이터를 대조하여 이미 본 공고는 자동으로 제외합니다.
-4. **뉴스레터 발송**: 모든 정보를 정리하여 하나의 이메일로 이쁘게 포장해 전송합니다.
+로컬 실행 시 저장소 루트에 `.env` 파일을 만들고 다음 값을 설정합니다. `.env`는 Git에 포함되지 않습니다.
 
----
+```dotenv
+SUPABASE_URL=your_supabase_url
+SUPABASE_ANON_KEY=your_supabase_anon_key
+EMAIL_USER=your_gmail_address
+EMAIL_PASS=your_gmail_app_password
+```
 
-## 🏗 시스템 아키텍처 및 기술
+GitHub Actions에서는 동일한 이름을 저장소의 Actions secrets로 등록해야 합니다.
 
-- **하이브리드 엔진**: Playwright의 신속한 크롤링과 Gemini AI의 지능형 분석을 결합하였습니다.
-- **기술 스택**: AI/LLM(Gemini), 자동화(Playwright), 발송(Nodemailer/SMTP), 환경(Windows Task Scheduler)
+## 로컬 실행
 
----
+```bash
+npm ci
+npx playwright install chromium
+npm start
+```
 
-## 👤 Author
+## GitHub Actions
 
-**jjiiw0n**  
+`.github/workflows/monitor.yml`은 다음 방식으로 실행됩니다.
 
-*프로젝트의 상세한 시행착오 및 기술적 해결 과정은 `project.md` 파일에서 확인하실 수 있습니다.*
+- 수동 실행: GitHub의 Actions 탭에서 `Career Newsletter Service` 선택 후 실행
+- 정기 실행: 매일 `00:00 UTC` (`09:00 KST`)
+
+워크플로는 `ubuntu-latest`, Node.js 22, Playwright Chromium을 사용합니다.
+
+## 주요 데이터베이스 객체
+
+운영 코드는 다음 Supabase 객체를 사용합니다.
+
+- `subscribers`: 활성 구독자와 이메일 정보
+- `monitoring_sites`: 구독자별 모니터링 사이트
+- `crawl_history`: 이미 발송한 게시물 링크와 제목
+
+## 레거시 자료
+
+`legacy/`와 `data/legacy/`는 Supabase 전환 전 사용하던 로컬 파일 기반 파이프라인을 보존한 영역입니다. 현재 GitHub Actions는 이 파일들을 실행하지 않습니다.
+
+과거 스크립트를 실행할 때는 저장소 루트를 현재 디렉터리로 사용해야 합니다.
+
+## 보안
+
+- `.env`, 서비스 계정 키, Gmail 앱 비밀번호를 커밋하지 마세요.
+- 운영 비밀값은 GitHub Actions secrets에서 관리하세요.
+- 로그에 이메일 비밀번호나 Supabase 키를 출력하지 마세요.
+
+## 문서
+
+- 상세 개발 기록: `project.md`
+- 이메일 설정 복구 기록: `docs/REVERT_EMAIL_CONFIG.md`
+- 과거 사이트별 참고 자료: `legacy/integrated-web-monitor/sites/`
+
+## Author
+
+jjiiw0n

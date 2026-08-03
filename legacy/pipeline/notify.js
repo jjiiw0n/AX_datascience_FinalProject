@@ -79,7 +79,7 @@ function generateHtml(newResults) {
     return { html, totalNew };
 }
 
-const NEW_RESULTS_FILE = 'new_results.json';
+const NEW_RESULTS_FILE = 'data/legacy/new_results.json';
 if (!fs.existsSync(NEW_RESULTS_FILE)) {
     console.log('new_results.json not found. Skipping notification.');
     process.exit(0);

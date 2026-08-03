@@ -18,18 +18,18 @@ The monitoring logic is split into individual modules for better maintainability
 
 ## ⚙️ Infrastructure (`infra/`)
 - **Scheduler:** `infra/scheduler.md` - Manages Windows Task Scheduler and batch execution settings.
-- **Parsing & Filtering:** `parse.js` - JavaScript script that scrapes local HTML files, compares with `history.json`, and outputs `new_results.json`.
+- **Parsing & Filtering:** `legacy/pipeline/parse.js` - JavaScript script that scrapes local HTML files, compares with `data/legacy/history.json`, and outputs `data/legacy/new_results.json`.
 
 ## 📓 Central Resources
-- **History Tracking:** `history.json` (Local file for persistent state).
+- **History Tracking:** `data/legacy/history.json` (Local file for persistent state).
 - **Primary Account:** `jeew0n.lee.217@gmail.com` (Both Sender and Receiver).
 
 ## 🛠 Execution Workflow
 1. **Scrape:** Use Playwright to download the latest HTML from target sites.
-2. **Filter (Code-based):** Run `node parse.js` to compare current data with `history.json`.
-   - **Output:** Only new items are stored in `new_results.json`.
+2. **Filter (Code-based):** Run `node legacy/pipeline/parse.js` to compare current data with `data/legacy/history.json`.
+   - **Output:** Only new items are stored in `data/legacy/new_results.json`.
 3. **Notify (AI-assisted):**
-   - **Load Data:** Read `new_results.json`.
+   - **Load Data:** Read `data/legacy/new_results.json`.
    - **Generate Report:** AI creates a consolidated report based *only* on the new items.
    - **Email:** Send via Gmail. Subject: `[통합 알림] 웹 모니터링 결과 보고 (YYYY-MM-DD)`.
    - **Heartbeat:** If no new posts, send a brief "System operational, no new updates" message.
