@@ -3,7 +3,8 @@ name: Career Newsletter Service
 on:
   workflow_dispatch:
   schedule:
-    - cron: '0 0 * * *'
+    # 매일 11:00 KST (02:00 UTC) 실행
+    - cron: '0 2 * * *'
 
 jobs:
   build:
