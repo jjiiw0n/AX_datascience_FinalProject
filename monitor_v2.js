@@ -1,9 +1,7 @@
 require('dotenv').config();
-const fs = require('fs');
 const { chromium } = require('playwright');
 const nodemailer = require('nodemailer');
 const supabase = require('./lib/supabase');
-const { execSync } = require('child_process');
 
 // --- Helpers & Parsers ---
 // ... (existing helper functions: normalizeLink, parseEtri, parseBtp, parseYouth)
@@ -26,7 +24,6 @@ async function scrapeNews(context) {
     };
 
     try {
-        // DongA Science
         const sciencePage = await context.newPage();
         await sciencePage.goto('https://www.dongascience.com/', { waitUntil: 'domcontentloaded' });
         results.science = await sciencePage.evaluate(() => {
@@ -37,44 +34,43 @@ async function scrapeNews(context) {
                 .slice(0, 3);
         });
         await sciencePage.close();
+    } catch (e) {
+        console.error('DongA Science scrape failed:', e.message);
+    }
 
-        // AI Times
+    try {
         const aiPage = await context.newPage();
         await aiPage.goto('https://www.aitimes.kr/news/articleList.html?sc_sub_section_code=S2N16&view_type=sm', { waitUntil: 'domcontentloaded' });
         results.ai = filterAndSort(await aiPage.evaluate(() => Array.from(document.querySelectorAll('h4.titles a')).map(a => ({ title: a.innerText.trim(), link: a.href }))), priorityKeywords.ai);
         await aiPage.close();
+    } catch (e) {
+        console.error('AI Times scrape failed:', e.message);
+    }
 
-        // Daily Defense
+    try {
         const defPage = await context.newPage();
         await defPage.goto('https://www.dailydefense.co.kr/news/articleList.html?sc_section_code=S1N1&view_type=sm', { waitUntil: 'domcontentloaded' });
         results.defense = filterAndSort(await defPage.evaluate(() => Array.from(document.querySelectorAll('.altlist-subject a')).map(a => ({ title: a.innerText.trim(), link: a.href }))), priorityKeywords.defense);
         await defPage.close();
-    } catch (e) { console.error('News scrape partial failure', e); }
+    } catch (e) {
+        console.error('Daily Defense scrape failed:', e.message);
+    }
+
+    const totalArticles = Object.values(results).reduce((sum, articles) => sum + articles.length, 0);
+    if (totalArticles === 0) {
+        throw new Error('All newsletter sources returned zero articles; refusing to send an empty newsletter.');
+    }
     return results;
 }
 
-async function generateInsight(newsData) {
-    const promptData = `
-아래 뉴스 제목들을 보고, 이번 주 산업 동향을 관통하는 핵심 키워드 5~7개를 선정해줘.
-형식은 반드시 '산업 동향: 키워드1, 키워드2, 키워드3, ...' 형태로만 작성해줘.
-
-[뉴스 목록]
-${[...newsData.science, ...newsData.ai, ...newsData.defense].map(n => n.title).join('\n')}
-    `;
-    fs.writeFileSync('data/legacy/temp_prompt.example.txt', promptData, 'utf8'); // Reuse temp file
-    try {
-        return execSync(`gemini.cmd -y "첨부된 'data/legacy/temp_prompt.example.txt'의 뉴스들을 보고 이번 주 산업 동향을 '산업 동향: 키워드1, 키워드2, ...' 형식으로만 작성해줘."`, { encoding: 'utf8' }).trim();
-    } catch (e) { return '이번 주 최신 산업 및 기술 동향을 전해드립니다.'; }
-}
-
-async function sendNewsletter(to, userName, jobResults, newsData, insight) {
+async function sendNewsletter(to, userName, newsData, insight) {
     const today = new Date().toLocaleDateString('ko-KR');
     let newsletterHtml = '';
     const categories = [{ key: 'science', name: '과학' }, { key: 'ai', name: 'AI/네트워크' }, { key: 'defense', name: '방산/국방' }];
 
     categories.forEach(cat => {
         newsletterHtml += `<hr style="border: 0; border-top: 1px solid #ddd; margin: 30px 0;">`;
-        newsletterHtml += `<h3 style="color: #2c3e50; margin-top: 0;">📌 이번 주 ${cat.name} TOP 3</h3><ul style="list-style: none; padding: 0;">`;
+        newsletterHtml += `<h3 style="color: #2c3e50; margin-top: 0;">📌 오늘의 ${cat.name} 주요 뉴스</h3><ul style="list-style: none; padding: 0;">`;
         (newsData[cat.key] || []).forEach((art, i) => {
             newsletterHtml += `<li style="margin-top: 10px;"><a href="${art.link}" style="text-decoration: none; color: #333;"><strong>${i+1}. ${art.title}</strong></a></li>`;
         });
@@ -83,12 +79,10 @@ async function sendNewsletter(to, userName, jobResults, newsData, insight) {
 
     let html = `
     <div style="font-family: 'Malgun Gothic', sans-serif; max-width: 800px; margin: 0 auto; padding: 20px; border: 1px solid #eee; color: #333;">
-        <h1 style="color: #1a73e8; text-align: center; border-bottom: 2px solid #1a73e8; padding-bottom: 15px;">🚀 주간 모니터링 & 뉴스레터 통합 리포트</h1>
-        <div style="margin-top: 30px;"><h2 style="color: #333; margin-bottom: 15px;">📢 신규 채용 공고</h2>
+        <h1 style="color: #1a73e8; text-align: center; border-bottom: 2px solid #1a73e8; padding-bottom: 15px;">🚀 ${userName}님을 위한 데일리 뉴스레터</h1>
     `;
     // ... (rest of html building logic from notify_newsletter.js)
-    html += `</div>
-        <div style="margin-top: 50px; padding: 25px; background-color: #fcfcfc; border: 1px dashed #1a73e8; border-radius: 10px;">
+    html += `<div style="margin-top: 30px; padding: 25px; background-color: #fcfcfc; border: 1px dashed #1a73e8; border-radius: 10px;">
              <p style="background-color: #f8f9fa; padding: 15px; border-left: 5px solid #1a73e8; font-style: italic; font-size: 1.1em;">"${insight}"</p>
             ${newsletterHtml}
         </div>
@@ -100,12 +94,14 @@ async function sendNewsletter(to, userName, jobResults, newsData, insight) {
         service: 'gmail',
         auth: { user: process.env.EMAIL_USER, pass: process.env.EMAIL_PASS }
     });
-    await transporter.sendMail({ from: process.env.EMAIL_USER, to: to, subject: `[주간 뉴스레터] 🚀 이번 주 산업 동향 리포트 (${today})`, html: html });
+    await transporter.sendMail({ from: process.env.EMAIL_USER, to, subject: `[데일리 뉴스레터] 오늘의 산업 동향 (${today})`, html });
 }
 
 // --- Main Logic ---
 // ... (existing monitor function, updated to include newsletter logic)
 
+function normalizeLink(link) {
+    if (!link) return '';
     let normalized = link.replace(/;jsessionid=[^?#]*/, '');
     if (normalized.includes('?')) {
         const urlObj = new URL(normalized);
@@ -251,10 +247,13 @@ function generateHtml(userResults, userName) {
 }
 
 async function sendEmail(to, userName, userResults) {
+    if (Object.keys(userResults).length === 0) {
+        throw new Error(`No monitoring sites are connected to ${to}; refusing to send an empty job email.`);
+    }
     const { html, totalNew } = generateHtml(userResults, userName);
     const subject = totalNew > 0
-        ? `[Career News] ● ${userName}님, 신규 공고 ${totalNew}건이 있습니다!`
-        : `[Career News] ○ 오늘자 업데이트 소식 (신규 없음)`;
+        ? `[주간 공고] ${userName}님, 신규 공고 ${totalNew}건이 있습니다!`
+        : `[주간 공고] 이번 주 신규 공고가 없습니다`;
 
     const transporter = nodemailer.createTransport({
         service: 'gmail',
@@ -296,16 +295,46 @@ async function monitor() {
         return;
     }
 
-    // 2. Scrape Unique Sites
-    // Only scrape on Mondays (day 1)
-    const isMonday = new Date().getDay() === 1;
+    // Legacy single-user data may have monitoring_sites.subscriber_id = null.
+    // Use those rows only when there is exactly one active subscriber, so a
+    // broken foreign key cannot produce an empty email or leak data to others.
+    if (subscribers.length === 1 && subscribers[0].monitoring_sites.length === 0) {
+        const { data: orphanSites, error: orphanError } = await supabase
+            .from('monitoring_sites')
+            .select('*')
+            .is('subscriber_id', null);
+        if (orphanError) throw orphanError;
+        if (orphanSites?.length) {
+            console.warn(`Using ${orphanSites.length} legacy monitoring site(s) with no subscriber_id.`);
+            subscribers[0].monitoring_sites = orphanSites;
+        }
+    }
+
+    // GitHub Actions runs in UTC, so determine the weekly delivery day in KST.
+    const isMonday = new Intl.DateTimeFormat('en-US', {
+        timeZone: 'Asia/Seoul',
+        weekday: 'short'
+    }).format(new Date()) === 'Mon';
     let dataCache = {};
     let htmlCache = {};
+    const browser = await chromium.launch({ headless: true });
+    const context = await browser.newContext();
 
+    // 2. The industry newsletter is collected and sent every day.
+    try {
+        const newsData = await scrapeNews(context);
+        const insight = '오늘의 과학·AI·방산 분야 주요 소식을 전해드립니다.';
+        for (const subscriber of subscribers) {
+            await sendNewsletter(subscriber.email, subscriber.user_name || '회원', newsData, insight);
+            console.log(`Daily newsletter sent to ${subscriber.email}`);
+        }
+    } catch (error) {
+        console.error('Daily newsletter failed:', error);
+    }
+
+    // 3. Recruitment sites are collected and mailed once a week on Monday.
     if (isMonday) {
         console.log('Monday detected. Starting site scraping...');
-        const browser = await chromium.launch({ headless: true });
-        const context = await browser.newContext();
 
         // --- Static/Regex Sites ---
         // Scrape ETRI
@@ -403,29 +432,88 @@ async function monitor() {
             await page.close();
         } catch (e) { console.error('KoreaAero scrape failed'); }
 
-        await browser.close();
     } else {
         console.log('Not Monday. Skipping site scraping.');
     }
 
-    // 3. Process each subscriber
-    // ... (subscriber loop)
-    // 4. Send Notification
-    // ... (sendEmail)
-
-    // 5. Weekly Newsletter (Only on Mondays)
+    // 4. Build and send each subscriber's weekly recruitment digest.
     if (isMonday) {
-        console.log('Monday: Processing Newsletter...');
-        const newsData = await scrapeNews(browser || await chromium.launch({ headless: true }));
-        const insight = await generateInsight(newsData);
-        // Assuming we send to all active subscribers for now or a specific one as per legacy.
-        // For now, let's assume the first active subscriber as a recipient for the newsletter.
-        if (subscribers.length > 0) {
-            await sendNewsletter(subscribers[0].email, subscribers[0].user_name || '회원', {}, newsData, insight);
+        for (const subscriber of subscribers) {
+            console.log(`Processing weekly jobs for: ${subscriber.email}`);
+            const userResults = {};
+
+            for (const site of subscriber.monitoring_sites) {
+                let posts = [];
+                if (site.url.includes('etri.re.kr') && htmlCache.etri) {
+                    posts = parseEtri(htmlCache.etri);
+                } else if (site.url.includes('btp.or.kr') && htmlCache.btp) {
+                    posts = parseBtp(htmlCache.btp);
+                } else if (site.url.includes('2030db.go.kr') && htmlCache.youth) {
+                    posts = parseYouth(htmlCache.youth);
+                } else if (site.url.includes('ligdna.recruiter.co.kr')) {
+                    posts = dataCache.lig_data || [];
+                } else if (site.url.includes('hanwhain.com')) {
+                    posts = dataCache.hanwha_data || [];
+                } else if (site.url.includes('koreaaero.recruiter.co.kr')) {
+                    posts = dataCache.kai_data || [];
+                }
+
+                const newPosts = [];
+                for (const post of posts) {
+                    const normalizedLink = normalizeLink(post.link);
+                    const { data: existing, error: historyError } = await supabase
+                        .from('crawl_history')
+                        .select('id')
+                        .eq('site_id', site.id)
+                        .eq('job_link', normalizedLink)
+                        .maybeSingle();
+                    if (historyError) throw historyError;
+
+                    if (!existing) {
+                        newPosts.push({ ...post, link: normalizedLink });
+                    }
+                }
+                userResults[site.site_name] = newPosts;
+            }
+
+            try {
+                await sendEmail(subscriber.email, subscriber.user_name || '회원', userResults);
+
+                // Mark posts as sent only after SMTP succeeds.
+                for (const site of subscriber.monitoring_sites) {
+                    for (const post of userResults[site.site_name] || []) {
+                        const { error: insertError } = await supabase.from('crawl_history').insert({
+                            site_id: site.id,
+                            job_title: post.title.trim(),
+                            job_link: post.link
+                        });
+                        if (insertError && insertError.code !== '23505') throw insertError;
+                    }
+                }
+                console.log(`Weekly job digest sent to ${subscriber.email}`);
+            } catch (error) {
+                console.error(`Weekly job digest failed for ${subscriber.email}:`, error);
+            }
         }
     }
 
+    await context.close();
+    await browser.close();
     console.log('Monitor run completed.');
 }
 
-monitor();
+if (require.main === module) {
+    monitor().catch(error => {
+        console.error('Fatal monitor error:', error);
+        process.exitCode = 1;
+    });
+}
+
+module.exports = {
+    filterAndSort,
+    normalizeLink,
+    parseEtri,
+    parseBtp,
+    parseYouth,
+    generateHtml
+};
